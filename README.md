@@ -5,10 +5,12 @@ A Python GUI is the interface the users uses to interact with the program. The G
 
 ## Team Members and Roles
 
-* ![Alec Mirambeau](https://github.com/alec202/CIS350-HW2-Mirambeau) (DBM/Backend)
-* ![Anthony Boos](https://github.com/anthonyboos559/CIS350-HW2-Boos) (GUI/Frontend)
-* ![Lydia Castilhos](https://github.com/lydecast/CIS350-HW2-Castilhos) (DBM) 
-* ![Asa Rowntree](https://github.com/AsaRowntree/CIS350-HW2_Rowntree) (GUI/Frontend)
+I (Alec Mirambeau) am continuing this project from where it originally was to add some more functionality.
+
+* [Alec Mirambeau](https://github.com/alec202/CIS350-HW2-Mirambeau) (DBM/Backend)
+* [Anthony Boos](https://github.com/anthonyboos559/CIS350-HW2-Boos) (GUI/Frontend)
+* [Lydia Castilhos](https://github.com/lydecast/CIS350-HW2-Castilhos) (DBM) 
+* [Asa Rowntree](https://github.com/AsaRowntree/CIS350-HW2_Rowntree) (GUI/Frontend)
 
 ## Prerequisites
 Having python 3.11 installed (sqllite3, OS and tkinter are built-in to Python. However, users should verify they indeed have these installed as they are required for this program to run properly).
