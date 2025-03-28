@@ -1,0 +1,34 @@
+1,Apple Sauce,10
+1,Fortnite Lego Set,10
+2,Coca-Cola 12-Pack,3
+2,Doritos Nacho Cheese,3
+3,Toothpaste,7
+3,Toothbrush,7
+3,Mouthwash,7
+4,Nintendo Switch,5
+4,Zelda: Tears of the Kingdom,5
+5,Coffee Beans,1
+6,Laptop Sleeve,13
+6,Wireless Mouse,13
+7,Notebook,4
+7,Pencil Pack,4
+7,Eraser,4
+8,Gaming Chair,9
+9,Bluetooth Speaker,12
+9,Portable Charger,12
+10,Shampoo,6
+10,Conditioner,6
+11,Chicken Breast,15
+11,Spinach,15
+11,Almond Milk,15
+12,HDMI Cable,2
+13,Monitor 27",14
+13,Webcam,14
+14,Cereal,8
+14,Milk,8
+14,Bananas,8
+15,Desk Lamp,11
+15,Extension Cord,11
+16,Graphic Tee,16
+16,Joggers,16
+16,Sneakers,16

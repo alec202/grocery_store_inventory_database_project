@@ -8,6 +8,7 @@ class Database:
         self._emp_id = 1
         self._mem_id = 1
         self._inv_id = 1
+        self._receipt_id = 1
         self.slash = os.sep
         self._connection = sqlite3.connect(f".{self.slash}data{self.slash}T.A.L.A. System Database")
         self._cursor = self._connection.cursor()
@@ -16,13 +17,13 @@ class Database:
         if not self._tables_exist():
             self._create_tables()
             self._load_tables_original_data()
+        else:
+            print(self._view_data(['receipts']))
 
-        # This is a test to add DB Branch
-        # this is another test to see if I'm pulling stuff correctly
 
     def _tables_exist(self):
         """Returns True if all 3 of our tables exist. Returns False otherwise."""
-        for table in ["Inventory", "Employee", "Member"]:
+        for table in ["Inventory", "Employee", "Member", "receipts"]:
             self._cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table}'")
             result = self._cursor.fetchone()
             self._connection.commit()
@@ -39,9 +40,9 @@ class Database:
         Returns:
             Returns the contents of the specified table.
         """
-        primary_keys_names = {"Inventory": "item_id", "Employee": "emp_id", "Member": "member_id"}
+        primary_keys_names = {"Inventory": "item_id", "Employee": "emp_id", "Member": "member_id", "receipts": "receipt_id"}
         table = data[0]
-        if table.isidentifier() and (table == 'Inventory' or table == 'Employee' or table == 'Member'):
+        if table.isidentifier() and (table == 'Inventory' or table == 'Employee' or table == 'Member' or table == "receipts"):
             rows = self._cursor.execute(f"SELECT * from {table} ORDER BY {primary_keys_names[table]};")
             self._connection.commit()
             contents = rows.fetchall()
@@ -53,6 +54,20 @@ class Database:
         self._load_inventory_table()
         self._load_employee_table()
         self._load_member_table()
+        self._load_original_receipts_data()
+
+    def _load_original_receipts_data(self):
+        """Loads receipt data with data stored from files."""
+        with open(f'.{self.slash}data{self.slash}originalItemsPurchased.txt', 'r') as mem_file:
+            all_data = mem_file.readlines()
+            for line in all_data:
+                items = []
+                data_split = line.split(",")
+                items.append("receipts"), items.append("add")
+                items += data_split
+                items[-1].rstrip()
+                self._add_row(items)
+
 
     def _load_member_table(self):
         """Loads member data with data from files."""
@@ -165,7 +180,17 @@ class Database:
             items_to_insert = id, name, email, phone_num, points
             self._cursor.execute(insertion_stat, items_to_insert)
             self._connection.commit()
-        # "INSERT INTO Member VALUES(member_id, name, email, phone_num, points);"
+        else:
+            # the table must be receipts table
+            id = items_to_add[2]
+            product_name = items_to_add[3]
+            customer_id = items_to_add[4]
+            insertion_statement = "INSERT INTO receipts (receipt_id, product_name, customer_id) VALUES (?, ?, ?)"
+            receipt_data_to_insert = id, product_name, customer_id
+            print(id, product_name, customer_id)
+            self._cursor.execute(insertion_statement, receipt_data_to_insert)
+            self._connection.commit()
+            print(self._view_data([table]))
         return self._view_data([table])
 
     def _delete_row(self, items: list[str]):
@@ -237,9 +262,11 @@ class Database:
         create_inventory_table = "CREATE TABLE Inventory(item_id INT PRIMARY KEY, Product_name VARCHAR(30), Count INT, Price NUMERIC(5, 2));"
         create_employee_table = "CREATE TABLE Employee(emp_id INT PRIMARY KEY, Name VARCHAR(30), Position VARCHAR(20), Email VARCHAR(35), Phone_num INT, Salary NUMERIC(6, 2));"
         create_member_table = "CREATE TABLE Member(member_id INT PRIMARY KEY, Name VARCHAR(30), Email VARCHAR(40), Phone_num VARCHAR(22), Points INT);"
+        create_receipts_table_query = "CREATE TABLE receipts(receipt_id INT, product_name VARCHAR(35), customer_id INT, FOREIGN KEY (customer_id) REFERENCES Member(member_id))"
         self._cursor.execute(create_inventory_table)
         self._cursor.execute(create_employee_table)
         self._cursor.execute(create_member_table)
+        self._cursor.execute(create_receipts_table_query)
         self._connection.commit()
 
     def _get_data_based_off_primary_key(self, table: str, id_num: int):
@@ -265,13 +292,13 @@ class Database:
             # is the table we want to mess with will be passed as the argument. So code nested in this if statement
             # will handle that scenario
             table = table[0]
-            primary_keys_names = {"Inventory": "item_id", "Employee": "emp_id", "Member": "member_id"}
+            primary_keys_names = {"Inventory": "item_id", "Employee": "emp_id", "Member": "member_id", "receipts": "receipt_id"}
             query = f"SELECT {primary_keys_names[table]} FROM {table};"
             return self._execute_sql_command(query)
         else:
             # if the method was called directly then a string representing the table should be passed and we can just
             # directly place that table name in our string.
-            primary_keys_names = {"Inventory": "item_id", "Employee": "emp_id", "Member": "member_id"}
+            primary_keys_names = {"Inventory": "item_id", "Employee": "emp_id", "Member": "member_id", "receipts": "receipt_id"}
             query = f"SELECT {primary_keys_names[table]} FROM {table};"
             return self._execute_sql_command(query)
 
@@ -281,7 +308,7 @@ class Database:
         Params:
             table (str): A string is the table we want to get an ID value for."""
         all_ids = self.get_all_ids(table)
-        ids = {"Employee": self._emp_id, "Inventory": self._inv_id, "Member": self._mem_id}
+        ids = {"Employee": self._emp_id, "Inventory": self._inv_id, "Member": self._mem_id, "receipts": self._receipt_id}
         specified_id = ids[table]
         while specified_id in [this_id[0] for this_id in all_ids]:
             specified_id += 1

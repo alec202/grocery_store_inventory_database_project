@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 import src.Database as db
 
 class GUI:
@@ -35,6 +36,9 @@ class GUI:
         self._action_frame.grid(row=0, column=1, sticky="N")
         for i, (value, text) in enumerate(self._actions.items()):
             tk.Radiobutton(master= self._action_frame, text= text, variable= self._action_var, value= value, command= self._configure_fields).grid(row=i, column=0, sticky="W")
+        getMostPurchasedItem = Button(self._main, text="Get most Purchased item")
+        getMostPurchasedItem.grid(row=len(self._actions), column=0, sticky="s")
+
 
     def _init_fields(self):
         self._field_frame = tk.LabelFrame(master= self._main, text="Fields:")
